@@ -111,7 +111,7 @@ impl<'f, 's: 'f, S: 's> Iterator for FrontElemIter<'f, 's, S> {
 /// Pareto front.
 pub fn non_dominated_sort<'s, S, D>(solutions: &'s [S], domination: &D) -> Front<'s, S>
 where
-    D: DominanceOrd<T = S>,
+    D: DominanceOrd<S>,
 {
     // The indices of the solutions that are dominated by this `solution`.
     let mut dominated_solutions: Vec<Vec<SolutionIdx>> =

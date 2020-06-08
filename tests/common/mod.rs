@@ -10,17 +10,12 @@ pub struct Tuple(pub usize, pub usize);
 // type, without having to wrap the "Tuple" itself.
 pub struct TupleDominanceOrd;
 
-impl DominanceOrd for TupleDominanceOrd {
-    type T = Tuple;
+impl DominanceOrd<Tuple> for TupleDominanceOrd {
 
-    fn dominance_ord(&self, a: &Self::T, b: &Self::T) -> Ordering {
-        if a.0 < b.0 && a.1 <= b.1 {
+    fn dominance_ord(&self, a: &Tuple, b: &Tuple) -> Ordering {
+        if a.0 < b.0 && a.1 <= b.1 || a.0 <= b.0 && a.1 < b.1 {
             Ordering::Less
-        } else if a.0 <= b.0 && a.1 < b.1 {
-            Ordering::Less
-        } else if a.0 > b.0 && a.1 >= b.1 {
-            Ordering::Greater
-        } else if a.0 >= b.0 && a.1 > b.1 {
+        } else if a.0 > b.0 && a.1 >= b.1 || a.0 >= b.0 && a.1 > b.1 {
             Ordering::Greater
         } else {
             Ordering::Equal
@@ -42,5 +37,5 @@ pub fn create_solutions_with_n_fronts(n: usize, n_fronts: usize) -> (Vec<Tuple>,
         expected_fronts.push(current_front);
     }
 
-    return (solutions, expected_fronts);
+    (solutions, expected_fronts)
 }
