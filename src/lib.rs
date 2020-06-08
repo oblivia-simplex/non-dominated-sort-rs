@@ -12,7 +12,10 @@
 //! [1]: https://www.iitk.ac.in/kangal/Deb_NSGA-II.pdf "A Fast and
 //! Elitist Multiobjective Genetic Algorithm: NSGA-II)"
 
+mod dominance_ord;
+
 pub use dominance_ord::DominanceOrd;
+
 use std::cmp::Ordering;
 
 type SolutionIdx = usize;
