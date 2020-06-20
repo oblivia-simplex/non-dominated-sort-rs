@@ -10,8 +10,10 @@ edition = "2018"
 
 include = ["**/*.rs", "Cargo.toml", "LICENSE", "README.md"]
 
+[profile.release]
+debug = true
+
 [dependencies]
-dominance-ord = "0.1"
 
 [dev-dependencies]
 criterion = "0.2"

@@ -21,7 +21,7 @@ use std::cmp::Ordering;
 type SolutionIdx = usize;
 
 #[derive(Debug, Clone)]
-pub struct Front<'s, S: 's> {
+pub struct Front<'s, S> {
     dominated_solutions: Vec<Vec<SolutionIdx>>,
     domination_count: Vec<usize>,
     previous_front: Vec<SolutionIdx>,
@@ -91,7 +91,7 @@ impl<'f, 's: 'f, S: 's> Front<'s, S> {
     }
 }
 
-pub struct FrontElemIter<'f, 's: 'f, S: 's> {
+pub struct FrontElemIter<'f, 's, S> {
     front: &'f Front<'s, S>,
     next_idx: SolutionIdx,
 }
@@ -127,10 +127,11 @@ where
     let mut current_front: Vec<SolutionIdx> = Vec::new();
 
     // inital pass over each combination: O(n*n / 2).
+    // why aren't we using the fact that domination is transitive?
     let mut iter = solutions.iter().enumerate();
     while let Some((p_i, p)) = iter.next() {
-        let mut pair_iter = iter.clone();
-        while let Some((q_i, q)) = pair_iter.next() {
+        let pair_iter = iter.clone();
+        for (q_i, q) in pair_iter {
             match domination.dominance_ord(p, q) {
                 Ordering::Less => {
                     // p dominates q
@@ -138,6 +139,11 @@ where
                     dominated_solutions[p_i].push(q_i);
                     // q is dominated by p
                     domination_count[q_i] += 1;
+                    // now apply transitivity
+                    // for s in &dominated_solutions[q_i] {
+                    //     dominated_solutions[p_i].push(s)
+                    //     domination_count[s] += 1;
+                    // }
                 }
                 Ordering::Greater => {
                     // p is dominated by q
